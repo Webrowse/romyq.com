@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { InstallPicker } from "@/components/install-picker";
 
 export const metadata = {
   title: "Romyq — Software Lifecycle Management",
   description:
-    "Open-source software lifecycle management for AI-assisted development. Local-first, terminal-native. pip install romyq",
+    "Open-source software lifecycle management for AI-assisted development. Local-first, terminal-native. brew install webrowse/street/romyq",
 };
 
 const jsonLd = {
@@ -78,35 +79,7 @@ function Hero() {
             </Link>
           </div>
 
-          <div className="terminal max-w-lg">
-            <div className="terminal-header">
-              <span className="term-dot" style={{ background: "#ff5f57" }} />
-              <span className="term-dot" style={{ background: "#febc2e" }} />
-              <span className="term-dot" style={{ background: "#28c840" }} />
-              <span
-                className="mono text-[11px] ml-2"
-                style={{ color: "var(--text-3)" }}
-              >
-                terminal
-              </span>
-            </div>
-            <div className="p-4 space-y-1">
-              <div className="mono text-[13px]">
-                <span style={{ color: "var(--text-3)" }}>$</span>{" "}
-                <span style={{ color: "var(--text)" }}>pip install romyq</span>
-              </div>
-              <div className="mono text-[13px]" style={{ color: "var(--text-3)" }}>
-                Successfully installed romyq-0.10.3
-              </div>
-              <div className="mono text-[13px] mt-2">
-                <span style={{ color: "var(--text-3)" }}>$</span>{" "}
-                <span style={{ color: "var(--text)" }}>romyq init</span>
-              </div>
-              <div className="mono text-[13px]" style={{ color: "var(--accent)" }}>
-                → Wizard launched. Follow the prompts.
-              </div>
-            </div>
-          </div>
+          <InstallPicker variant="hero" />
         </div>
       </div>
     </section>
@@ -506,32 +479,11 @@ function Install() {
           className="text-[15px] leading-relaxed mb-8"
           style={{ color: "var(--text-2)" }}
         >
-          Requires Python 3.10+. No cloud account, no signup, no telemetry.
+          No cloud account, no signup, no telemetry.
         </p>
 
-        <div className="terminal max-w-xl mb-8">
-          <div className="terminal-header">
-            <span className="term-dot" style={{ background: "#ff5f57" }} />
-            <span className="term-dot" style={{ background: "#febc2e" }} />
-            <span className="term-dot" style={{ background: "#28c840" }} />
-          </div>
-          <div className="p-4 space-y-1">
-            <div className="mono text-[13px]">
-              <span style={{ color: "var(--text-3)" }}>$</span>{" "}
-              <span style={{ color: "var(--text)" }}>pip install romyq</span>
-            </div>
-            <div className="mono text-[13px] mt-2">
-              <span style={{ color: "var(--text-3)" }}>$</span>{" "}
-              <span style={{ color: "var(--text)" }}>romyq init</span>
-            </div>
-            <div className="mono text-[13px]" style={{ color: "var(--text-3)" }}>
-              # configure provider → define mission → select complexity profile
-            </div>
-            <div className="mono text-[13px] mt-2">
-              <span style={{ color: "var(--text-3)" }}>$</span>{" "}
-              <span style={{ color: "var(--text)" }}>romyq dashboard</span>
-            </div>
-          </div>
+        <div className="mb-8">
+          <InstallPicker variant="full" />
         </div>
 
         <div className="flex flex-wrap gap-3">
