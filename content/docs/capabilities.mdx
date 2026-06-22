@@ -1,0 +1,84 @@
+---
+title: Capabilities
+description: How Romyq tracks what a project can and cannot do.
+---
+
+## What Is a Capability?
+
+A capability is a named, trackable aspect of a project's functionality. Romyq uses
+capabilities to understand what a project has, what it still needs, and whether the
+readiness score is accurate.
+
+The capabilities Romyq tracks by default map to the readiness categories:
+
+- **Core Functionality** — Core Features, Database, Validation
+- **Testing** — Testing
+- **Security** — Security, Authentication, Authorization
+- **Operations** — Deployment, Observability, Documentation
+
+## Capability States
+
+Each capability can be in one of three states:
+
+| State | Meaning | Readiness weight |
+|---|---|---|
+| `complete` | Fully implemented and verified | 1.0 |
+| `partial` | Implementation started but incomplete | 0.5 |
+| `missing` | Required but not yet implemented | 0.0 |
+
+## Viewing capabilities
+
+```bash
+romyq capabilities              # list all tracked capabilities
+romyq capabilities list         # same as above
+romyq capabilities --json       # machine-readable output
+```
+
+Capabilities are also shown in the readiness output:
+
+```bash
+romyq readiness
+```
+
+```
+mission readiness: 67 / 100  (Approaching)
+
+  Core Functionality  45%    Core Features: partial, Database: complete
+  Testing              0%    Testing: missing
+  Security            83%    Security: complete, Authentication: partial
+  Operations          33%    Deployment: missing
+```
+
+## Updating capabilities manually
+
+```bash
+romyq capabilities set "Authentication" complete
+romyq capabilities set "Testing" partial
+romyq capabilities set "Deployment" missing
+```
+
+Valid status values: `complete`, `partial`, `missing`.
+
+## Inferring capabilities from task history
+
+```bash
+romyq capabilities infer
+```
+
+Romyq reads the task history and infers capability states based on which tasks have
+completed. Useful after manually editing files outside the loop.
+
+## How capabilities are tracked automatically
+
+During planning, the planner tags each task with one or more capability labels. As
+tasks complete, their capability tags are aggregated into the project capability model
+stored in `.romyq/project_state.json`.
+
+## Capabilities and the recommendation engine
+
+- 5 or more consecutive task failures trigger `Review`, regardless of capability state.
+- All phases complete but done criteria not yet satisfied triggers `Review`.
+- All phases complete and all done criteria satisfied triggers `Stop`.
+
+The `Stop` recommendation does not require capabilities to be manually verified — it
+relies on phase and done-criteria completion.

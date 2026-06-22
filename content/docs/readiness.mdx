@@ -1,0 +1,90 @@
+---
+title: Readiness
+description: How Romyq scores a project's readiness and what the score means.
+---
+
+## What Is Readiness?
+
+Readiness is a score from 0 to 100 that answers: *can this project stop now?* It is
+computed from capability states across four categories, each weighted differently. It
+is not a count of tasks done.
+
+## Score Categories
+
+| Category | Weight | Capabilities included |
+|---|---|---|
+| Core Functionality | 40% | Core Features, Database, Validation |
+| Testing | 25% | Testing |
+| Security | 20% | Security, Authentication, Authorization |
+| Operations | 15% | Deployment, Observability, Documentation |
+
+Each category score is the average of its capabilities, where `complete = 1.0`,
+`partial = 0.5`, and `missing = 0.0`.
+
+## Score Labels
+
+| Score | Label |
+|---|---|
+| 0–49 | Not Ready |
+| 50–74 | Approaching |
+| 75–89 | Ready |
+| 90–100 | Excellent |
+
+## Viewing readiness
+
+```bash
+romyq readiness           # score with category breakdown
+romyq readiness --json    # machine-readable output
+```
+
+Example output:
+
+```
+mission readiness: 67 / 100  (Approaching)
+
+  Core Functionality  80%
+  Testing              0%
+  Security            83%
+  Operations          33%
+
+recommendation: Continue
+rationale: Testing phase incomplete.
+```
+
+## Done criteria
+
+Done criteria are defined per-phase during planning. They describe what "complete"
+means for each phase in terms specific to the mission. Examples:
+
+- `setup` phase: all dependencies installed, config files present, project runs locally
+- `testing` phase: >80% line coverage, all integration tests pass, CI configuration present
+- `deployment` phase: staging deployed, health checks passing, rollback procedure documented
+
+Romyq checks done criteria by pattern-matching against phase names, task descriptions,
+and capability states.
+
+## Readiness and the recommendation engine
+
+The recommendation engine reads readiness alongside lifecycle state and done criteria:
+
+- `Continue` — work is in progress, no blocking conditions
+- `Pause` — operator requested a pause
+- `Review` — 5+ consecutive task failures, or all phases complete but criteria not met
+- `Stop` — all phases complete and all done criteria satisfied
+
+The readiness threshold (default: 75) is a soft gate for early `Stop` — it does not
+block the `Stop` recommendation once lifecycle and done criteria are satisfied.
+
+## Common patterns
+
+**"The score is low but some things work"**
+The score reflects capability state, not lines of code. If Testing is `missing`,
+the Testing category contributes 0% regardless of how much other code exists.
+
+**"Tasks are finishing but the score isn't moving"**
+If the tasks completing are not advancing any of the tracked capability states,
+the score will not move. Check `romyq capabilities` to see current states.
+
+**"I added a rule and the score dropped"**
+Rules affect the planning of future tasks. They do not retroactively change capability
+states or scores. If the score dropped, check `romyq decisions` for rejected tasks.

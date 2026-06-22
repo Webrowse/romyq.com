@@ -1,0 +1,52 @@
+---
+title: Romyq 0.10.2
+version: "0.10.2"
+date: "2025-12-20"
+tag: patch
+highlights:
+  - Readiness scoring v2
+  - Timeline view in dashboard
+  - Improved knowledge extraction
+---
+
+## Overview
+
+Romyq 0.10.2 ships a revised readiness scoring algorithm, a timeline view in the
+dashboard, and significantly improved knowledge extraction from large codebases.
+
+## Changes
+
+### Readiness Scoring v2
+
+The readiness algorithm is rewritten for 0.10.2. It now aggregates:
+
+- Phase completion (weighted by phase index — later phases count more)
+- Capability coverage (present / required)
+- Done criteria satisfaction (per-phase, not per-task)
+- Constitution violation count (active violations reduce score)
+
+Scores in v2 are generally lower than v1 for the same state, reflecting more accurate
+assessment of real production readiness.
+
+### Timeline View
+
+The dashboard now includes a scrollable timeline showing every phase transition, task
+outcome, and operator command in chronological order. Access with `romyq timeline` or
+the `T` key in the dashboard.
+
+### Knowledge Extraction Improvements
+
+Knowledge extraction can now process repositories up to 500k lines of code without
+running out of context. It uses chunked extraction with deduplication across chunks.
+
+### Minor Improvements
+
+- `romyq why` now explains what the current task unblocks, not just why it exists.
+- Phase done criteria are now shown in `romyq roadmap --verbose`.
+- `REVIEW` state now includes the specific capability that triggered the review.
+
+## Installation
+
+```bash
+pip install romyq==0.10.2
+```

@@ -1,0 +1,55 @@
+---
+title: Romyq 0.10.1
+version: "0.10.1"
+date: "2025-12-03"
+tag: patch
+highlights:
+  - DeepSeek provider support
+  - Capability tracking improvements
+  - Reduced planning latency
+---
+
+## Overview
+
+Romyq 0.10.1 adds DeepSeek as a supported planning provider, improves capability tracking
+accuracy, and reduces average planning latency by approximately 30%.
+
+## Changes
+
+### DeepSeek Provider
+
+DeepSeek models (R1, V3) can now be used as the planning provider. DeepSeek performs
+well on decomposition and phase planning tasks at significantly lower cost per token
+than comparable models.
+
+Configure via `romyq init` or:
+
+```toml
+# .romyq/config.toml
+[providers]
+planning = "deepseek"
+planning_model = "deepseek-reasoner"
+```
+
+### Capability Tracking Improvements
+
+Capability tracking now distinguishes between `present`, `partial`, and `missing` states
+with higher accuracy. The readiness score now weights `partial` capabilities at 50%
+rather than 0%, reducing false `STOP` recommendations on near-complete projects.
+
+### Planning Latency
+
+Phase decomposition runs in parallel where possible. Projects with 4+ phases see
+approximately 30% reduction in time-to-first-task.
+
+### Bug Fixes
+
+- `romyq roadmap` no longer throws when a phase has zero tasks.
+- Constitution rules with special characters no longer cause evaluation errors.
+- Execution memory now correctly records task outcomes for tasks that produce no file changes.
+
+## Installation
+
+```bash
+pip install romyq==0.10.1
+```

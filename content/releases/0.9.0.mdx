@@ -1,0 +1,65 @@
+---
+title: Romyq 0.9.0
+version: "0.9.0"
+date: "2025-10-14"
+tag: minor
+highlights:
+  - Initial public release
+  - Core lifecycle engine
+  - Basic complexity profile
+---
+
+## Overview
+
+Romyq 0.9.0 is the first public release of the Romyq software lifecycle management system.
+It ships the core lifecycle engine, a project constitution system, and the `Basic` complexity
+profile — enough to take a software idea from intent to a working implementation.
+
+## What's New
+
+### Core Lifecycle Engine
+
+The lifecycle engine manages eight stages from mission definition to completion. Projects
+are structured as ordered phases; tasks execute within those phases. State persists across
+sessions in `.romyq/` within the project directory.
+
+### Basic Complexity Profile
+
+The `Basic` profile uses three phases — setup, implement, verify — suitable for quick
+scripts, prototypes, and well-scoped tools. It is the default profile when running `romyq init`.
+
+### Project Constitution
+
+The constitution system lets operators define rules that govern every planning decision.
+Rules in `.romyq/constitution.md` are enforced before any task is generated. Tasks that
+violate rules are rejected and replanned automatically.
+
+### `romyq init` Wizard
+
+The init wizard walks through provider configuration, mission definition, and profile
+selection. It produces a fully initialised project ready for lifecycle execution.
+
+### Dashboard
+
+The in-terminal dashboard shows current phase, active task, mission readiness, and
+recommendation in a single view. It refreshes after every task completion.
+
+## Commands
+
+- `romyq init` — initialise a new project
+- `romyq dashboard` — open the lifecycle dashboard
+- `romyq roadmap` — show phase status
+- `romyq readiness` — show readiness score
+- `romyq why` — explain the current task
+
+## Installation
+
+```bash
+pip install romyq==0.9.0
+```
+
+## Known Limitations
+
+- Only the `Basic` complexity profile is available in this release.
+- Provider support is limited to OpenAI-compatible APIs.
+- The recommendation engine returns `CONTINUE` or `STOP` only; `REVIEW` state arrives in 0.10.

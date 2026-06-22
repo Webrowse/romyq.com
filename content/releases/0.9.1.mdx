@@ -1,0 +1,50 @@
+---
+title: Romyq 0.9.1
+version: "0.9.1"
+date: "2025-10-28"
+tag: patch
+highlights:
+  - Improved error recovery
+  - Constitution reload without restart
+  - Dashboard stability fixes
+---
+
+## Overview
+
+Romyq 0.9.1 is a patch release focusing on stability and usability improvements to the
+core lifecycle engine introduced in 0.9.0.
+
+## Changes
+
+### Error Recovery
+
+When an execution step fails, the lifecycle engine now preserves all state accumulated up
+to the point of failure. Running `romyq resume` restores the project to the last clean
+checkpoint without losing completed phase data or knowledge extractions.
+
+### Constitution Hot Reload
+
+The project constitution can now be edited and reloaded without restarting the lifecycle.
+Changes take effect on the next task evaluation. Previously, a restart was required.
+
+```bash
+# edit .romyq/constitution.md, then:
+romyq reload
+```
+
+### Dashboard Fixes
+
+- Fixed a rendering issue causing the phase list to flicker on rapid task transitions.
+- Dashboard now handles terminal widths below 80 columns without layout corruption.
+- Progress bars now cap at 100% when all phase tasks are complete.
+
+### Knowledge Extraction Improvements
+
+Knowledge extraction now deduplicates entries across sessions. Repeated facts no longer
+accumulate across runs of the same project.
+
+## Installation
+
+```bash
+pip install romyq==0.9.1
+```

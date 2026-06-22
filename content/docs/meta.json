@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "getting-started",
+    "installation",
+    "quick-start",
+    "concepts",
+    "lifecycle",
+    "governance",
+    "complexity-profiles",
+    "rules",
+    "knowledge",
+    "capabilities",
+    "readiness",
+    "dashboard",
+    "commands",
+    "architecture",
+    "faq"
+  ]
+}

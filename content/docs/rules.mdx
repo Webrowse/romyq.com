@@ -1,0 +1,76 @@
+---
+title: Rules
+description: How to define and manage project governance rules in Romyq.
+---
+
+## What are rules?
+
+Rules are plain-text constraints that govern every planning decision Romyq makes. They are stored in `.romyq/rules.json` and injected into every DeepSeek planning call.
+
+When the planner proposes a task that violates a rule, the task is rejected and replanned. This happens before execution — no violating task ever reaches Claude Code.
+
+Examples:
+
+```
+Always use PostgreSQL
+Never use SQLite
+Require tests for every endpoint
+Backend must be complete before any frontend work
+Authentication must be complete before any protected routes
+No hardcoded secrets — all secrets via environment variables
+```
+
+## Managing rules
+
+```bash
+romyq rules                          # list active rules
+romyq rules list                     # same as above
+romyq rules add "Always use PostgreSQL"
+romyq rules add "Never use SQLite"
+romyq rules add "Require tests for all API endpoints"
+romyq rules remove "Always use PostgreSQL"
+romyq rules --json                   # list as JSON
+```
+
+## When rules take effect
+
+Rules are injected into the next planning call. They do not require a restart or reload — the planner reads the current `rules.json` before each task generation.
+
+Previously completed tasks are not re-evaluated when you add a new rule.
+
+## From the operator shell
+
+In `romyq shell`, typing any text that is not a built-in command records it as a steering instruction. You can use this to guide the planner, but it is not a rule — it does not persist beyond the current planning context.
+
+To add a permanent rule from the shell:
+
+```
+> rules add Always use PostgreSQL
+```
+
+Or from a regular terminal:
+
+```bash
+romyq rules add "Always use PostgreSQL"
+```
+
+## Viewing decisions
+
+Every governance evaluation is written to `.romyq/decisions.json`. To see recent decisions:
+
+```bash
+romyq decisions              # show last 20 decisions
+romyq decisions --last 50    # show more
+romyq decisions --json       # machine-readable output
+```
+
+Each decision entry records the task, the rules it was evaluated against, the result (accepted or rejected), and the reason.
+
+## Relationship to the project constitution
+
+`romyq constitution` generates `.romyq/project.md` — a single-document view of the whole project including mission, phases, capabilities, and current rules. It is a read-only snapshot. Editing it does not change the governance rules; use `romyq rules add/remove` for that.
+
+```bash
+romyq constitution           # write .romyq/project.md
+romyq constitution --print   # print to stdout
+```

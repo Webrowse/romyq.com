@@ -1,0 +1,127 @@
+---
+title: FAQ
+description: Frequently asked questions about Romyq.
+---
+
+## General
+
+### What is Romyq?
+
+Romyq is a local-first software lifecycle management system. It takes a software idea,
+structures it into a lifecycle with ordered phases, enforces project rules, tracks
+readiness, and coordinates between AI models to execute the work — entirely on your machine.
+
+### How is Romyq different from an AI coding assistant?
+
+An AI coding assistant (Cursor, Copilot, Claude Code) helps with individual tasks.
+Romyq manages the software project. It knows what is being built, what phase is active,
+what has been tried, what the rules are, and whether the project is actually ready. It
+uses AI coding assistants as execution providers — the models write the code, Romyq
+coordinates the lifecycle.
+
+### Is Romyq a wrapper around Claude Code?
+
+No. Romyq can use Claude Code as an execution provider, but it works with any
+OpenAI-compatible API. It is a lifecycle coordination system, not an agent wrapper.
+
+### Does Romyq send my code to a cloud service?
+
+No. Romyq runs entirely on your machine. The only network calls go to whichever LLM API
+you configure. No telemetry. No analytics. Nothing is sent to Romyq servers — there are
+no Romyq servers.
+
+## Setup
+
+### What Python version does Romyq require?
+
+Python 3.10 or later.
+
+### Can I use Romyq with an existing project?
+
+Yes. Run `romyq attach` in an existing project directory. Romyq creates `.romyq/` and a
+`mission.md` template without running the wizard. Edit `mission.md` to describe what you
+want and then run `romyq doctor` and `romyq run`.
+
+### Where does Romyq store its state?
+
+All state is in `.romyq/` within the project directory and in `mission.md` at the project
+root. Add `.romyq/` to `.gitignore` or commit it — both approaches work. The files are
+human-readable JSON and Markdown.
+
+### Do I need a specific LLM provider?
+
+You need a [DeepSeek API key](https://platform.deepseek.com/) for the planning provider and [Claude Code](https://claude.ai/code) installed and authenticated for the execution provider. Set the key in `.env`:
+
+```
+DEEPSEEK_API_KEY=sk-...
+```
+
+## Lifecycle
+
+### How long does a lifecycle take?
+
+It depends on complexity profile and project scope. For reference:
+- `Basic` profile, simple script: ~20–40 minutes
+- `Intermediate` profile, REST API: ~2–5 hours
+- `Advanced` profile, production service: ~6–16 hours
+
+These are wall-clock times including LLM API latency.
+
+### Can I stop and resume a lifecycle?
+
+Yes. Run `romyq pause` to halt after the current task. State is preserved. Run
+`romyq resume` to continue. If the process is killed ungracefully, run
+`romyq resume` — it reads `.romyq/state.json` and restarts from the last checkpoint.
+
+### What happens if a task fails?
+
+The lifecycle engine records the failure in `.romyq/history.json` and replans the
+task. If replanning also fails repeatedly, the engine escalates to `Review` and waits for
+operator input via `romyq steer`. It will not loop indefinitely.
+
+## Governance
+
+### What are project rules?
+
+Rules are plain-text constraints stored in `.romyq/rules.json`. Every proposed task is
+evaluated against these rules before execution. Tasks that violate a rule are rejected
+and replanned. Manage rules with:
+
+```bash
+romyq rules add "Always use PostgreSQL"
+romyq rules remove "Always use PostgreSQL"
+romyq rules list
+```
+
+### Can I change rules mid-lifecycle?
+
+Yes. `romyq rules add/remove` takes effect on the next planning call. Previously
+completed tasks are not re-evaluated.
+
+## Readiness and Recommendation
+
+### What does a readiness score of 100% mean?
+
+All done criteria for all phases are satisfied, all required capabilities are in the
+`complete` state, and there are no active governance violations. The recommendation
+engine will emit `Stop`.
+
+### Can I override the Stop recommendation?
+
+Yes. The recommendation engine advises — it does not stop the lifecycle automatically.
+You must explicitly run `romyq stop` to terminate. You can continue past a `Stop`
+recommendation by simply not running `romyq stop`.
+
+### What triggers the Stop recommendation?
+
+`Stop` is emitted when all phases are complete and all done criteria are satisfied.
+Readiness must be ≥ 75 (default threshold). You can check the current recommendation
+at any time:
+
+```bash
+romyq recommendation
+```
+
+### How often is the recommendation recalculated?
+
+After every task completion and after every operator command that changes project state.

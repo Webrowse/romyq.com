@@ -1,0 +1,84 @@
+---
+title: Knowledge
+description: How Romyq extracts and uses knowledge about your project.
+---
+
+## What Is the Knowledge Layer?
+
+The knowledge layer stores distilled facts about the project — things learned from reading code, observing task outcomes, and processing execution history. These facts are injected into every planning prompt.
+
+Knowledge is stored in `.romyq/knowledge.json` and updated after every task.
+
+## What Gets Extracted?
+
+Romyq extracts facts in several categories:
+
+**Technology choices** — frameworks, libraries, databases, languages identified in
+the codebase. For example: `"Project uses Drizzle ORM with PostgreSQL"`.
+
+**Existing implementations** — modules, patterns, or capabilities already present.
+For example: `"Authentication middleware exists at /src/auth/middleware.ts"`.
+
+**Constraints discovered during execution** — things that didn't work, limitations
+found, or dependencies identified.
+
+**Naming and structural conventions** — how files are named, how modules are
+organised, which patterns are used.
+
+## How Extraction Works
+
+After every task, Romyq reads the files modified by that task and feeds them (with
+context) to the knowledge extraction step. The extractor identifies facts that are
+likely to be relevant to future planning decisions and writes them to the knowledge store.
+
+Extraction is incremental — it processes only the delta from each task, not the whole
+codebase. A full-codebase scan runs once during `romyq init` or `romyq attach`.
+
+## How Knowledge Influences Planning
+
+Every planning prompt includes the current knowledge store. The planning provider reads
+this before generating phase plans or task lists.
+
+This means:
+- The planner knows about existing implementations and won't duplicate them.
+- The planner knows about technology constraints and will respect them.
+- The planner knows about naming conventions and will follow them.
+
+## Viewing the knowledge base
+
+```bash
+romyq knowledge           # show lessons and patterns
+romyq knowledge --json    # machine-readable output
+romyq patterns            # extracted failure and success patterns
+romyq patterns --json
+```
+
+## Refreshing context
+
+To regenerate `.romyq/context.md` from a static analysis of the current codebase:
+
+```bash
+romyq learn
+```
+
+This is useful after a major refactor or when the knowledge base has become stale.
+`context.md` is injected into future planning calls alongside `knowledge.json`.
+
+## Editing the knowledge store
+
+The knowledge store is a JSON file you can edit directly:
+
+```json
+{
+  "lessons": [
+    "Uses TypeScript with strict mode enabled",
+    "Database: PostgreSQL via Drizzle ORM",
+    "API framework: Hono on Cloudflare Workers"
+  ]
+}
+```
+
+Add, edit, or remove entries. Changes take effect on the next planning call.
+
+To reset the knowledge base, delete or clear `.romyq/knowledge.json`. Romyq will
+rebuild it from the codebase on the next planning step.

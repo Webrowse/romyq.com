@@ -1,0 +1,113 @@
+---
+title: Lifecycle
+description: The eight-stage lifecycle that Romyq builds for every project, from mission definition to verified completion.
+---
+
+## Overview
+
+Every project in Romyq follows the same eight-stage lifecycle. These stages are ordered — each one depends on the previous completing. The complexity profile determines how many phases appear within stage 03 and how many tasks are generated per phase.
+
+## The Eight Stages
+
+### 01 · Mission
+
+The operator defines what the project must accomplish. The mission is a plain-language statement stored in `mission.md` at the project root.
+
+```markdown
+Build a REST API for analytics with authentication and PostgreSQL.
+Use Hono on Cloudflare Workers. All endpoints must have integration tests.
+```
+
+The mission is passed to the planning provider in every prompt. Planning decisions that contradict the mission are rejected.
+
+### 02 · Lifecycle
+
+Romyq selects a lifecycle model based on the project type and the complexity profile chosen during `romyq init`. The lifecycle model determines the shape of the stages that follow.
+
+### 03 · Phases
+
+The planning provider decomposes the mission into ordered phases. Each phase has:
+
+- A name and description
+- Done criteria (what must be true before the phase is complete)
+- A dependency on all predecessor phases
+
+The number of phases depends on the complexity profile:
+
+| Profile | Phases |
+|---|---|
+| Basic | 3 |
+| Intermediate | 5 |
+| Advanced | 7 |
+
+Phases cannot overlap. Phase N cannot start until Phase N−1 is complete and its done criteria are satisfied.
+
+### 04 · Tasks
+
+Within each phase, the planning provider generates tasks. Each task has:
+
+- A title and description
+- A capability tag (what the project gains when the task is done)
+- Dependencies on other tasks within the phase
+- A reference to which phase it belongs
+
+Tasks pass through governance evaluation before they enter the execution queue. Tasks that violate the project rules are rejected and replanned.
+
+### 05 · Execution
+
+The execution provider (Claude Code) runs each task. After every task completes, Romyq:
+
+1. Records the outcome in `.romyq/history.json`
+2. Updates the knowledge layer
+3. Recomputes the readiness score
+4. Emits a recommendation (`Continue`, `Pause`, `Review`, or `Stop`)
+
+The operator observes this in the dashboard. Execution does not stop automatically.
+
+### 06 · Validation
+
+After the execution phase tasks are complete, Romyq checks the done criteria for each phase. This is not a test runner — it evaluates whether the criteria defined during planning are satisfied based on the current project state.
+
+If a phase fails validation, the execution provider is prompted to close the gap before moving on.
+
+### 07 · Readiness
+
+Romyq computes a readiness score from 0 to 100 after every task, not just after validation. The score is a weighted aggregate across four categories:
+
+| Category | Weight |
+|---|---|
+| Core Functionality | 40% |
+| Testing | 25% |
+| Security | 20% |
+| Operations | 15% |
+
+A score of 100 means all criteria are met, all required capabilities are present, and there are no active violations.
+
+### 08 · Completion
+
+The recommendation engine emits `Stop` when:
+
+- All phases are complete
+- All done criteria are satisfied
+- Readiness is ≥ 75
+
+The `Stop` recommendation is advisory. The operator confirms by running `romyq stop`. The lifecycle is recorded as complete in `.romyq/history.json`.
+
+## Viewing lifecycle state
+
+```bash
+romyq roadmap              # show phase status and progress
+romyq readiness            # show current readiness score
+romyq readiness --json     # machine-readable output
+romyq timeline             # chronological log of all lifecycle events
+```
+
+## Resuming after interruption
+
+Lifecycle state is preserved on failure or interruption. Resume with:
+
+```bash
+romyq resume
+```
+
+Romyq reads `.romyq/state.json` to determine where to restart from. Previously completed tasks are not re-run.

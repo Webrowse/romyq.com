@@ -1,0 +1,101 @@
+---
+title: Getting Started
+description: Install Romyq and run your first autonomous project in under five minutes.
+---
+
+## What you'll need
+
+- Python 3.10 or later
+- Git
+- A [DeepSeek API key](https://platform.deepseek.com/) — for planning
+- [Claude Code](https://claude.ai/code) installed and authenticated — for execution
+
+## Install
+
+```bash
+pip install romyq
+romyq version   # confirm: romyq 0.10.3
+```
+
+## New project
+
+```bash
+mkdir my-project
+cd my-project
+git init
+romyq init
+```
+
+The wizard asks for your mission, complexity profile, and DeepSeek API key. It writes `.env`, creates `.romyq/`, generates a `mission.md`, and shows a lifecycle preview from DeepSeek before you confirm.
+
+## Existing project
+
+```bash
+cd my-existing-project
+romyq attach
+```
+
+This attaches Romyq without running the wizard. It creates `.romyq/` and a `mission.md` template. Edit `mission.md` to describe what you want built.
+
+## Set your API key
+
+If you need to set or update the key manually:
+
+```bash
+echo "DEEPSEEK_API_KEY=sk-..." >> .env
+```
+
+## Check your environment
+
+```bash
+romyq doctor
+```
+
+This validates your API key, Claude Code installation, and git setup. Fix any reported issues before running.
+
+## Run
+
+```bash
+romyq run
+```
+
+Romyq reads `mission.md`, generates a task plan with DeepSeek, and executes each task with Claude Code. Every successful task is committed to git. The loop runs until you stop it or add `--until-complete`.
+
+```bash
+romyq run --until-complete   # stop automatically when done
+romyq run --approval         # approve each task before it executes
+```
+
+## Monitor
+
+Open a second terminal while `romyq run` is active:
+
+```bash
+romyq status       # current task and loop state
+romyq dashboard    # full lifecycle text overview
+romyq health       # high-level health summary
+```
+
+Or launch the live Textual TUI (requires `pip install 'romyq[ui]'`):
+
+```bash
+romyq ui
+```
+
+## Steer and control
+
+```bash
+romyq pause                              # pause after current task
+romyq resume                             # resume
+romyq stop                               # graceful shutdown
+romyq steer "use PostgreSQL"             # inject instruction into next planning call
+romyq note "focus on auth next"          # add a steering note
+romyq rules add "Always write tests"     # add a governance rule
+```
+
+## Next steps
+
+- [Quick Start](/docs/quick-start) — complete end-to-end walkthrough
+- [Commands](/docs/commands) — full CLI reference (40 commands)
+- [Complexity Profiles](/docs/complexity-profiles) — Basic, Intermediate, Advanced
+- [Governance](/docs/governance) — rules and the decision log

@@ -1,0 +1,103 @@
+---
+title: Governance
+description: How Romyq enforces project rules and handles violations.
+---
+
+## What is governance?
+
+Governance is the system that enforces project rules before execution. Every proposed task is evaluated against the active rules before it runs. Tasks that violate rules are rejected and replanned — not skipped.
+
+## Rules
+
+Rules are plain-text strings stored in `.romyq/rules.json`. They are injected into every DeepSeek planning call so the planner knows them before proposing tasks.
+
+```bash
+romyq rules add "Always use PostgreSQL. Never use SQLite."
+romyq rules add "Every source file must have a corresponding test file."
+romyq rules add "Backend APIs must be implemented before any frontend work."
+romyq rules add "Authentication must be complete before any protected routes."
+romyq rules list
+romyq rules remove "Always use PostgreSQL. Never use SQLite."
+```
+
+Rules are read fresh before each planning call. Adding or removing a rule takes effect on the next iteration — no restart required.
+
+## How enforcement works
+
+1. Planning provider proposes a task.
+2. Romyq evaluates the task against every rule in `.romyq/rules.json`.
+3. If the task violates a rule, it is rejected with a reason.
+4. The planning provider is re-prompted with the rejection reason.
+5. The planning provider proposes a replacement task.
+6. Steps 2–5 repeat until a compliant task is accepted.
+
+This happens synchronously before execution. No task reaches Claude Code without passing governance.
+
+## Viewing the decision log
+
+Every governance evaluation is written to `.romyq/decisions.json`:
+
+```bash
+romyq decisions              # show last 20 decisions
+romyq decisions --last 50    # show more
+romyq decisions --json       # machine-readable output
+```
+
+Each entry records the task, the rules it was evaluated against, the result (accepted or rejected), and the reason.
+
+## Capability ordering
+
+Rules can express ordering constraints between capabilities:
+
+```
+Testing capability must be present before deployment capability can begin.
+Security capability must be present before any endpoint is exposed publicly.
+Authentication must be complete before any user-facing routes are created.
+```
+
+If a task would work on a blocked capability before its prerequisite is complete, governance rejects the task and the planner must propose something else.
+
+See [Capabilities](/docs/capabilities) for how capability tracking works.
+
+## The project constitution document
+
+`romyq constitution` generates `.romyq/project.md` — a single-document view of the whole project, including mission, phases, capabilities, and current rules. It is a read-only snapshot:
+
+```bash
+romyq constitution           # write to .romyq/project.md
+romyq constitution --print   # print to stdout
+```
+
+Editing `project.md` does not change the rules. Rules are managed exclusively via `romyq rules add/remove`.
+
+## Common patterns
+
+**Technology mandates**
+
+```
+Use Rust for all new services.
+Use PostgreSQL. No other relational database.
+Use Hono for API routes. Do not use Express.
+```
+
+**Quality gates**
+
+```
+Every exported function must have a docstring.
+No TODO comments in committed code.
+All API endpoints must have integration tests.
+```
+
+**Ordering constraints**
+
+```
+Do not start deployment before all tests pass.
+Authentication must be implemented before user-facing endpoints.
+```
+
+**Prohibitions**
+
+```
+Do not add any external analytics SDKs.
+No hardcoded secrets. All secrets via environment variables.
+```

@@ -1,0 +1,72 @@
+---
+title: Romyq 0.10.0
+version: "0.10.0"
+date: "2025-11-18"
+tag: minor
+highlights:
+  - Intermediate and Advanced complexity profiles
+  - REVIEW recommendation state
+  - Operator steering commands
+  - Anthropic Claude provider support
+---
+
+## Overview
+
+Romyq 0.10.0 is a significant feature release. It adds two new complexity profiles,
+expands the recommendation engine with a `REVIEW` state, introduces a full set of
+operator steering commands, and adds Anthropic Claude as a supported provider.
+
+## What's New
+
+### Intermediate and Advanced Complexity Profiles
+
+**Intermediate** (5 phases) — setup, database, implement, test, documentation — is now
+the recommended default for software that will be shared or maintained. Done criteria
+include working tests and complete documentation.
+
+**Advanced** (7 phases) — setup, database, auth, implement, test, deploy, monitor —
+targets production-grade software. The profile enforces security capability tracking,
+deployment readiness, and operational monitoring before marking completion.
+
+### REVIEW Recommendation State
+
+The recommendation engine now emits three states: `CONTINUE`, `REVIEW`, and `STOP`.
+
+`REVIEW` signals that a capability is partially implemented or a security check requires
+operator confirmation before the lifecycle continues. The operator can reply `resume` to
+proceed or `reject <task>` to replan.
+
+### Operator Steering Commands
+
+A full suite of steering commands is now available at the dashboard prompt:
+
+| Command | Effect |
+|---|---|
+| `use <tech>` | Add a rule to the constitution |
+| `focus <area>` | Reprioritise phase ordering |
+| `pause` | Halt after current task |
+| `resume` | Continue from paused state |
+| `reject <task>` | Block a task and trigger replanning |
+| `stop` | Terminate the lifecycle |
+
+### Anthropic Claude Provider
+
+Claude Code can now serve as the execution provider. Configure with `romyq init`
+or set `execution_provider = "anthropic"` in `.romyq/config.toml`.
+
+### Decision Log
+
+Every governance evaluation, task rejection, and replanning decision is now written to
+`.romyq/decision.jsonl`. The log is append-only, human-readable, and diffable.
+
+## Breaking Changes
+
+- The `Basic` profile now requires explicit selection via `romyq init --profile basic`.
+  `Intermediate` is the new default.
+- `.romyq/config.toml` replaces the previous `.romyq/config.json` format.
+
+## Installation
+
+```bash
+pip install romyq==0.10.0
+```

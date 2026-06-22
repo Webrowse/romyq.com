@@ -1,0 +1,443 @@
+---
+title: Commands
+description: Complete CLI reference for Romyq 0.10.3. All 40 subcommands with flags and usage.
+---
+
+## Setup
+
+### `romyq init`
+
+Start the interactive setup wizard. Creates a new managed workspace with `.romyq/`, a `mission.md` template, and a `.env` file if one does not exist. DeepSeek generates a lifecycle preview before you confirm.
+
+```bash
+romyq init              # interactive wizard (recommended)
+romyq init --no-wizard  # non-interactive legacy init
+romyq init --no-vcs     # skip git init
+romyq init /path/to/dir # init in a specific directory
+```
+
+### `romyq attach`
+
+Attach Romyq to an existing git repository without running the wizard. Creates `.romyq/` and a `mission.md` template if absent. Use this when you already have a codebase.
+
+```bash
+romyq attach            # current directory
+romyq attach /path/to/repo
+```
+
+After attaching: edit `mission.md` to describe what you want built, then run `romyq doctor` and `romyq run`.
+
+### `romyq doctor`
+
+Validate the environment: checks for required API keys, Claude Code installation, git repository, and configuration.
+
+```bash
+romyq doctor
+```
+
+---
+
+## Running
+
+### `romyq run`
+
+Start the autonomous development loop. Romyq reads `mission.md`, sends it to the planning provider (DeepSeek), generates a task plan, and executes each task with the execution provider (Claude Code). Commits every successful task.
+
+```bash
+romyq run                     # run indefinitely
+romyq run --until-complete    # stop when mission is complete
+romyq run --approval          # prompt for approval before each Claude execution
+romyq run /path/to/workspace  # run against a specific workspace
+```
+
+Set the workspace via environment variable instead of a flag:
+
+```bash
+ROMYQ_WORKSPACE=/path/to/repo romyq run
+```
+
+### `romyq pause`
+
+Request a pause after the current task finishes. The loop keeps running until the task completes, then idles. State is preserved. Run `romyq resume` to continue.
+
+```bash
+romyq pause
+```
+
+### `romyq resume`
+
+Resume a paused loop. Reads `.romyq/state.json` to determine where to restart. Previously completed tasks are not re-run.
+
+```bash
+romyq resume
+```
+
+### `romyq stop`
+
+Request a graceful shutdown after the current task finishes. Also wakes the loop immediately if it is sleeping during a rate-limit wait.
+
+```bash
+romyq stop
+```
+
+### `romyq steer`
+
+Send a live operator instruction to the planner. The instruction is recorded and included in the next planning call. Use for immediate steering without launching the shell.
+
+```bash
+romyq steer "use PostgreSQL for all database work"
+romyq steer "prioritize authentication before other features"
+```
+
+### `romyq note`
+
+Add a steering note that the planner will read on the next iteration. Appended to `.romyq/notes.md`.
+
+```bash
+romyq note "Focus on the admin dashboard next"
+```
+
+---
+
+## Governance
+
+### `romyq rules`
+
+Manage project governance rules. Rules are stored in `.romyq/rules.json` as plain text and injected into every DeepSeek planning call.
+
+```bash
+romyq rules                          # list active rules
+romyq rules list                     # same as above
+romyq rules add "Always use PostgreSQL"
+romyq rules add "Never use SQLite"
+romyq rules add "Require tests for every endpoint"
+romyq rules remove "Always use PostgreSQL"
+romyq rules --json                   # output as JSON
+```
+
+---
+
+## Observability
+
+### `romyq status`
+
+Show the current run state: active task, phase, last commit, heartbeat timestamp.
+
+```bash
+romyq status
+romyq status --json
+```
+
+### `romyq health`
+
+High-level health summary: tasks completed, failure rate, active findings, heartbeat age.
+
+```bash
+romyq health
+```
+
+### `romyq report`
+
+Full human-readable project report: mission, task progress, commits, steering notes, findings.
+
+```bash
+romyq report
+```
+
+### `romyq logs`
+
+Per-task history with success/failure status and validation reason.
+
+```bash
+romyq logs
+romyq logs --last 20    # show last 20 entries (default: 10)
+```
+
+### `romyq events`
+
+Recent entries from the event log (`.romyq/events.log`).
+
+```bash
+romyq events
+romyq events --last 50  # default: 30
+```
+
+### `romyq info`
+
+Show what Romyq detects about a repository: language, frameworks, test suite, build commands.
+
+```bash
+romyq info
+```
+
+### `romyq stats`
+
+Long-run operational statistics: total tasks, validator pass rate, retry count, runtime.
+
+```bash
+romyq stats
+romyq stats --json
+```
+
+### `romyq timeline`
+
+Human-readable event timeline of every phase transition, task outcome, and operator command.
+
+```bash
+romyq timeline
+romyq timeline --last 30   # default: 50
+romyq timeline --json
+```
+
+### `romyq explain`
+
+Full diagnostic picture: current state, recent failures, recovery guidance, and evidence.
+
+```bash
+romyq explain
+```
+
+---
+
+## Lifecycle
+
+### `romyq dashboard`
+
+Text output of the lifecycle-first dashboard. Answers eight questions about the current state: what is being built, which phase is active, how many phases remain, how complete is the project, what Romyq is doing now, why it is doing it, should you continue, and can you stop.
+
+```bash
+romyq dashboard
+```
+
+### `romyq ui`
+
+Launch the live Textual TUI dashboard. Run this in a second terminal alongside `romyq run`. Requires the UI extra.
+
+```bash
+pip install 'romyq[ui]'   # install once
+
+# Terminal 1
+romyq run
+
+# Terminal 2
+romyq ui
+```
+
+### `romyq roadmap`
+
+Show the lifecycle roadmap with phase progress bars.
+
+```bash
+romyq roadmap
+romyq roadmap --json
+```
+
+### `romyq lifecycle`
+
+Show or manage the software lifecycle.
+
+```bash
+romyq lifecycle           # show current lifecycle
+romyq lifecycle show      # same as above
+romyq lifecycle reset     # reset lifecycle state (destructive)
+romyq lifecycle --json
+```
+
+### `romyq phase`
+
+Show the current lifecycle phase and its tasks.
+
+```bash
+romyq phase
+```
+
+### `romyq plan`
+
+Show the current mission task plan with status.
+
+```bash
+romyq plan
+romyq plan --json
+```
+
+### `romyq profile`
+
+Show or set the project complexity profile.
+
+```bash
+romyq profile                    # show current profile
+romyq profile basic              # set to basic
+romyq profile intermediate       # set to intermediate
+romyq profile advanced           # set to advanced
+```
+
+---
+
+## Readiness & Intelligence
+
+### `romyq readiness`
+
+Show mission readiness score across four categories: Core Functionality, Testing, Security, Operations.
+
+```bash
+romyq readiness
+romyq readiness --json
+```
+
+### `romyq capabilities`
+
+Show or update the project capability model.
+
+```bash
+romyq capabilities                             # list capabilities
+romyq capabilities list                        # same as above
+romyq capabilities set "Authentication" complete
+romyq capabilities set "Testing" partial
+romyq capabilities infer                       # infer from task history
+romyq capabilities --json
+```
+
+### `romyq recommendation`
+
+Show the current project recommendation: `Continue`, `Pause`, `Review`, or `Stop`.
+
+```bash
+romyq recommendation
+romyq recommendation --json
+```
+
+### `romyq decisions`
+
+Show the governance decision log from `.romyq/decisions.json`.
+
+```bash
+romyq decisions
+romyq decisions --last 10   # default: 20
+romyq decisions --json
+```
+
+### `romyq knowledge`
+
+Show the knowledge base: synthesized lessons, extracted patterns, and freshness indicators.
+
+```bash
+romyq knowledge
+romyq knowledge --json
+```
+
+### `romyq patterns`
+
+Show extracted failure and success patterns from the knowledge base.
+
+```bash
+romyq patterns
+romyq patterns --json
+```
+
+### `romyq memory`
+
+Show execution memory analysis: failure rates, retry patterns, task outcome history.
+
+```bash
+romyq memory
+romyq memory --json
+```
+
+### `romyq planning`
+
+Show planning diagnostics: memory signals, knowledge signals, loop detection state.
+
+```bash
+romyq planning
+romyq planning --json
+```
+
+### `romyq constitution`
+
+Generate `.romyq/project.md` — a single-document view of the whole project: mission, phases, capabilities, rules, and readiness.
+
+```bash
+romyq constitution           # write to .romyq/project.md
+romyq constitution --print   # print to stdout instead
+```
+
+### `romyq learn`
+
+Generate or refresh `.romyq/context.md` from static analysis of the codebase. This context is injected into future planning calls.
+
+```bash
+romyq learn
+```
+
+### `romyq project-timeline`
+
+Show the project evolution timeline in human-readable terms ("Added Authentication", not "Task #17 complete").
+
+```bash
+romyq project-timeline
+romyq project-timeline --last 20
+romyq project-timeline --json
+```
+
+---
+
+## Display
+
+### `romyq architecture`
+
+Show the lifecycle architecture flow diagram as text.
+
+```bash
+romyq architecture
+```
+
+---
+
+## Meta
+
+### `romyq version`
+
+Show version, install type (pip/brew), and Python version.
+
+```bash
+romyq version
+```
+
+### `romyq shell`
+
+Launch the live operator shell — a REPL that runs alongside `romyq run` in another terminal. Built-in commands give immediate access to lifecycle state. Any other text is recorded as a steering instruction.
+
+```bash
+romyq shell
+```
+
+**Shell built-in commands:**
+
+| Command | Description |
+|---|---|
+| `status` | Current task, phase, and loop state |
+| `roadmap` | Lifecycle roadmap with progress bars |
+| `phase` | Current phase and its tasks |
+| `capabilities` | Project capability model |
+| `readiness` | Mission readiness score |
+| `recommendation` | Continue / Pause / Review / Stop |
+| `pause` | Pause after the current task |
+| `resume` | Resume a paused loop |
+| `stop` | Graceful shutdown |
+| `rules` | List active project rules |
+| `knowledge` | Knowledge base summary |
+| `dashboard` | Full lifecycle-first overview |
+| `help` | Show this list |
+| `exit` / `quit` | Exit the shell |
+
+**Free-text steering:** Any text that does not match a built-in command is recorded as a steering instruction and picked up by the planner on the next loop iteration.
+
+```
+> use PostgreSQL for all database work
+  Instruction recorded: use PostgreSQL for all database work
+
+> require tests before the deployment phase
+  Instruction recorded: require tests before the deployment phase
+```
+
+Use `romyq steer` from a regular terminal to do the same thing without launching the shell.

@@ -1,0 +1,93 @@
+---
+title: Complexity Profiles
+description: Romyq's three complexity profiles — Basic, Intermediate, and Advanced — control the number of phases, task granularity, and the depth of governance evaluation.
+---
+
+## Overview
+
+The complexity profile is selected once during `romyq init`. It controls:
+
+- How many phases the planning provider creates
+- How granular the task decomposition is
+- Whether advanced governance features are active
+
+The profile is stored in `.romyq/project_profile.json`. You can change it at any time with `romyq profile basic/intermediate/advanced`.
+
+## Basic
+
+**Phases:** 3 — Setup, Implementation, Completion
+
+Best for small tools, scripts, proof-of-concept projects, or anything with a narrow scope where five or seven phases would create unnecessary overhead.
+
+What Basic provides:
+
+- Three-phase lifecycle
+- Simplified done criteria (fewer checkpoints)
+- Governance evaluation active at phase boundaries
+
+Example lifecycle for a Basic project building a data-export script:
+
+```
+Phase 01 · Setup          install dependencies, configure environment
+Phase 02 · Implementation write the export logic and tests
+Phase 03 · Completion     validate output, document usage
+```
+
+## Intermediate
+
+**Phases:** 5 — Setup, Core, Integration, Testing, Deployment
+
+Best for API services, CLI tools, libraries, or projects with distinct architectural layers that should be developed in order. This is the default for most projects.
+
+What Intermediate adds over Basic:
+
+- Five-phase lifecycle with explicit Integration and Testing phases
+- Per-task governance evaluation (rules checked before every task, not just at phase boundaries)
+- Capability tracking (capabilities are assigned to tasks and tracked over time)
+- Readiness score computed after every task
+
+Example lifecycle for an Intermediate project building a REST API:
+
+```
+Phase 01 · Setup       install, config, database schema
+Phase 02 · Core        models, services, business logic
+Phase 03 · Integration API routes, authentication, middleware
+Phase 04 · Testing     unit tests, integration tests, coverage
+Phase 05 · Deployment  CI/CD, containerization, production config
+```
+
+## Advanced
+
+**Phases:** 7 — Setup, Architecture, Core, Integration, Testing, Hardening, Deployment
+
+Best for production services with security requirements, multi-component systems, or projects where premature integration is a known risk.
+
+What Advanced adds over Intermediate:
+
+- Seven-phase lifecycle with explicit Architecture and Hardening phases
+- Architecture phase must complete before any implementation begins
+- Hardening phase explicitly addresses security, performance, and observability
+- Capability ordering is enforced more strictly (capability X cannot start until prerequisite Y is complete)
+
+Example lifecycle for an Advanced project:
+
+```
+Phase 01 · Setup        environment, tooling, dependency audit
+Phase 02 · Architecture schema design, API contracts, component boundaries
+Phase 03 · Core         models, services, domain logic
+Phase 04 · Integration  APIs, authentication, external integrations
+Phase 05 · Testing      unit, integration, contract, load tests
+Phase 06 · Hardening    security review, rate limiting, logging, observability
+Phase 07 · Deployment   CI/CD, infrastructure, runbooks, production readiness
+```
+
+## Choosing a profile
+
+| If... | Use |
+|---|---|
+| Project is narrow in scope or exploratory | Basic |
+| Project is a service, tool, or library with clear layers | Intermediate |
+| Project has security requirements or known integration risks | Advanced |
+| You are unsure | Intermediate |
+
+The profile affects planning depth, not what Romyq can track. All profiles support the full command set: `romyq dashboard`, `romyq readiness`, `romyq roadmap`, `romyq timeline`, `romyq decisions`, and all steering commands.

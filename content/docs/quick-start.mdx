@@ -1,0 +1,113 @@
+---
+title: Quick Start
+description: A complete end-to-end walkthrough — from install to first commit.
+---
+
+This is the 60-second path. It skips explanation. See [Getting Started](/docs/getting-started) for more detail and [Commands](/docs/commands) for the full reference.
+
+## 1. Install
+
+```bash
+pip install romyq
+```
+
+## 2. Create a workspace
+
+```bash
+mkdir my-api && cd my-api
+git init
+romyq init
+```
+
+The wizard prompts for your mission, complexity profile, and DeepSeek API key. At the end you see a lifecycle preview. Confirm to proceed.
+
+Alternatively, for an existing codebase:
+
+```bash
+cd my-existing-project
+romyq attach
+```
+
+## 3. Edit your mission
+
+`romyq init` creates `mission.md` in the project root. Edit it:
+
+```markdown
+Build a REST API for task management.
+Use Node.js with Hono. PostgreSQL with Drizzle ORM.
+Authentication via JWT. Tests required for all endpoints.
+```
+
+No template or schema required — plain language is fine.
+
+## 4. Check the environment
+
+```bash
+romyq doctor
+```
+
+Fix any issues reported before continuing.
+
+## 5. Run
+
+```bash
+romyq run
+```
+
+Romyq generates a task plan with DeepSeek and executes each task with Claude Code. Every successful task becomes a git commit.
+
+To stop automatically when the mission is complete:
+
+```bash
+romyq run --until-complete
+```
+
+## 6. Monitor in a second terminal
+
+```bash
+romyq status       # current task and loop state
+romyq roadmap      # phase progress
+romyq dashboard    # full lifecycle overview (text)
+romyq ui           # live Textual TUI (requires pip install 'romyq[ui]')
+```
+
+## 7. Steer
+
+While the loop is running:
+
+```bash
+# From any terminal
+romyq steer "use Drizzle ORM, not Prisma"
+romyq steer "authentication must be complete before any protected routes"
+romyq rules add "Always write tests for every endpoint"
+romyq pause     # pause after current task
+romyq resume    # continue
+romyq stop      # graceful shutdown
+```
+
+Or launch the operator shell alongside the loop:
+
+```bash
+romyq shell
+```
+
+At the `>` prompt, type any built-in command (`status`, `roadmap`, `readiness`, `recommendation`) or free-text instruction. Free text is recorded as a steering note.
+
+## 8. Check progress
+
+```bash
+romyq readiness       # 0–100 score across Core Functionality, Testing, Security, Operations
+romyq recommendation  # Continue / Pause / Review / Stop
+romyq timeline        # chronological log of all events
+romyq decisions       # governance decision log
+```
+
+## What happens automatically
+
+- Every successful task is committed to git
+- Governance rules are enforced before each task executes
+- The knowledge base is updated after each task
+- Readiness is recomputed after each task
+- A recommendation is emitted after each task
+
+When the recommendation is `Stop`, all phases are complete and all done criteria are satisfied. Run `romyq stop` to exit the loop.

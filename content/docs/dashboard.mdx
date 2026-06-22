@@ -1,0 +1,94 @@
+---
+title: Dashboard
+description: romyq dashboard (text output) and romyq ui (Textual TUI) — two ways to monitor an active lifecycle.
+---
+
+## Two monitoring commands
+
+Romyq provides two dashboard commands:
+
+| Command | What it does |
+|---|---|
+| `romyq dashboard` | Prints the lifecycle overview as text output. Run it once per check-in. |
+| `romyq ui` | Launches a live Textual TUI that updates in real time alongside `romyq run`. |
+
+---
+
+## `romyq dashboard`
+
+A single `romyq dashboard` call answers the eight key questions about the current lifecycle:
+
+1. What is being built?
+2. Which phase is active?
+3. How many phases remain?
+4. How complete is the project?
+5. What is Romyq doing right now?
+6. Why is it doing it?
+7. Should you continue running?
+8. Can you stop now?
+
+```bash
+romyq dashboard
+```
+
+Run this from any terminal at any time — it does not need to be open during the loop.
+
+---
+
+## `romyq ui`
+
+The live Textual TUI displays the same information in a structured panel layout that
+refreshes automatically as the loop runs. Run it in a second terminal alongside `romyq run`.
+
+**Install the UI extra first:**
+
+```bash
+pip install 'romyq[ui]'
+```
+
+**Launch alongside the loop:**
+
+```bash
+# Terminal 1
+romyq run
+
+# Terminal 2
+romyq ui
+```
+
+Example layout:
+
+```
+┌─ romyq  /path/to/project  ● running  tasks:12  commit:abc1234 ─┐
+│                                                                  │
+│  Current Task              │  Claude Output                      │
+│  ─────────────────────     │  ──────────────────────────────     │
+│  Implement JWT middleware   │  Created auth/jwt.py               │
+│  for protected API routes   │  All 24 tests passing              │
+│                             │  Committed: feat: add JWT auth     │
+│  ─────────────────────     │  ──────────────────────────────     │
+│  Task History              │  Findings                           │
+│  ✓ 15:42  Add OAuth         │  [HIGH] Repeated failure: auth     │
+│  ✗ 15:40  Add tests         │  [MEDI] Missing input validation   │
+│  ✓ 15:38  Fix vulns         │                                    │
+└───────────────────────────────────────────────────────────────────┘
+│  q quit  r refresh                                                │
+```
+
+The TUI polls state files every 2 seconds. No changes to the running loop are required.
+
+---
+
+## Individual commands
+
+If you prefer targeted lookups over a full dashboard view:
+
+```bash
+romyq status          # current task, phase, heartbeat
+romyq roadmap         # phase progress with bars
+romyq readiness       # 0–100 score across 4 categories
+romyq recommendation  # Continue / Pause / Review / Stop
+romyq timeline        # chronological event log
+romyq health          # high-level health summary
+romyq logs            # per-task history
+```

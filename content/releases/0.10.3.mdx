@@ -1,0 +1,67 @@
+---
+title: Romyq 0.10.3
+version: "0.10.3"
+date: "2026-01-14"
+tag: patch
+highlights:
+  - Gemini provider support
+  - Recommendation engine v2
+  - Multi-project support
+  - Performance improvements
+---
+
+## Overview
+
+Romyq 0.10.3 is the current stable release. It adds Google Gemini as a provider,
+ships recommendation engine v2, and introduces multi-project support for managing
+more than one lifecycle from a single terminal session.
+
+## What's New
+
+### Gemini Provider
+
+Google Gemini (2.0 Flash, 2.0 Pro) is now supported as both a planning and
+execution provider. Gemini 2.0 Flash offers the fastest time-to-first-task of any
+supported provider.
+
+```toml
+# .romyq/config.toml
+[providers]
+planning = "gemini"
+planning_model = "gemini-2.0-flash"
+```
+
+### Recommendation Engine v2
+
+The recommendation engine is rewritten in v2. Key changes:
+
+- `REVIEW` state now fires on any capability rated `partial` with a security tag.
+- `STOP` now requires 100% of done criteria satisfied (v1 required 80%).
+- Engine re-evaluates after every operator command, not just task completion.
+- Recommendation rationale is now structured (machine-readable in decision log).
+
+### Multi-Project Support
+
+Operators can now manage multiple projects from a single dashboard. Use
+`romyq switch <project>` to move between projects without leaving the dashboard.
+Each project maintains its own state, memory, and constitution independently.
+
+### Performance
+
+- Dashboard initial render: 40% faster.
+- Constitution evaluation: now O(n) for n rules, previously O(n²).
+- Memory writes are now batched to reduce I/O during active execution phases.
+
+### Bug Fixes
+
+- Fixed race condition when two tasks complete within the same 100ms window.
+- `romyq pause` now correctly waits for the current task to finish before halting.
+- Knowledge extraction no longer includes test fixture data in the repository memory.
+
+## Installation
+
+```bash
+pip install romyq==0.10.3
+```
+
+This is the current stable version. Run `pip install romyq` without a version pin to install it.
