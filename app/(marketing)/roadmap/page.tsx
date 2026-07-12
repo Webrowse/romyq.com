@@ -61,7 +61,7 @@ export default function RoadmapPage() {
         <ItemList
           items={[
             { title: "Documentation", detail: "Expanding coverage of all commands, concepts, and lifecycle stages." },
-            { title: "Test coverage", detail: "Expanding test suite beyond the current 1,555 tests." },
+            { title: "Test coverage", detail: "Expanding test suite beyond the current 1,500+ tests." },
           ]}
           status="active"
         />
