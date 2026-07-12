@@ -74,16 +74,14 @@ export function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[13px] hover:text-white transition-colors"
-                        style={{ color: "var(--text-3)" }}
+                        className="text-[13px] link-quiet"
                       >
                         {link.label} ↗
                       </a>
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-[13px] hover:text-white transition-colors"
-                        style={{ color: "var(--text-3)" }}
+                        className="text-[13px] link-quiet"
                       >
                         {link.label}
                       </Link>

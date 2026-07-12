@@ -38,7 +38,6 @@ export default function HomePage() {
         <WhatIsRomyq />
         <Comparison />
         <Implemented />
-        <RoadmapPreview />
         <Install />
       </main>
     </>
@@ -77,6 +76,14 @@ function Hero() {
             <Link href="/docs" className="btn-secondary">
               Documentation
             </Link>
+            <a
+              href="https://github.com/Webrowse/romyq"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary"
+            >
+              GitHub ↗
+            </a>
           </div>
 
           <InstallPicker variant="hero" />
@@ -90,7 +97,7 @@ function Hero() {
 function Facts() {
   const facts = [
     { label: "Version", value: "v0.10.3" },
-    { label: "Tests", value: "1,555+" },
+    { label: "Tests", value: "1,500+" },
     { label: "License", value: "MIT" },
     { label: "Cloud dependency", value: "None" },
     { label: "Telemetry", value: "None" },
@@ -340,6 +347,14 @@ function Implemented() {
           style={{ color: "var(--text-2)" }}
         >
           These features are implemented and available in the current release.
+          For what&apos;s planned next, see the{" "}
+          <Link
+            href="/roadmap"
+            className="underline underline-offset-2"
+            style={{ color: "var(--text-2)" }}
+          >
+            full roadmap →
+          </Link>
         </p>
 
         <ul className="grid sm:grid-cols-2 gap-2.5">
@@ -375,95 +390,6 @@ function Implemented() {
   );
 }
 
-/* ─── Roadmap preview ─── */
-function RoadmapPreview() {
-  const planned = [
-    "Bounded improvement cycles — multiple passes on complex tasks",
-    "Structured lifecycle reviews between phases",
-    "Enhanced visibility tooling and dashboard output",
-    "Improved multi-provider coordination",
-  ];
-
-  const potential = [
-    "Desktop UI (under consideration, no timeline)",
-    "Team workflows (not in active development)",
-    "Cloud-optional mode (not planned in the near term)",
-  ];
-
-  return (
-    <section className="py-14 lg:py-16" style={{ borderBottom: B }}>
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <h2
-          className="text-[22px] font-semibold mb-2"
-          style={{ color: "var(--text)" }}
-        >
-          What&apos;s coming
-        </h2>
-        <p className="text-[15px] leading-relaxed mb-8" style={{ color: "var(--text-2)" }}>
-          Items are marked clearly as planned or potential.{" "}
-          <Link
-            href="/roadmap"
-            className="underline underline-offset-2"
-            style={{ color: "var(--text-2)" }}
-          >
-            See the full roadmap →
-          </Link>
-        </p>
-
-        <div className="grid sm:grid-cols-2 gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-[14px] font-semibold" style={{ color: "var(--text)" }}>
-                Planned
-              </h3>
-              <span className="tag tag-blue">v0.11</span>
-            </div>
-            <p className="text-[12px] mono mb-3" style={{ color: "var(--text-4)" }}>
-              Not yet implemented
-            </p>
-            <ul className="space-y-2">
-              {planned.map((item) => (
-                <li
-                  key={item}
-                  className="flex gap-2.5 text-[13px]"
-                  style={{ color: "var(--text-2)" }}
-                >
-                  <span style={{ color: "var(--text-4)" }}>□</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-[14px] font-semibold" style={{ color: "var(--text)" }}>
-                Potential
-              </h3>
-              <span className="tag tag-neutral">research</span>
-            </div>
-            <p className="text-[12px] mono mb-3" style={{ color: "var(--text-4)" }}>
-              Under consideration, not committed
-            </p>
-            <ul className="space-y-2">
-              {potential.map((item) => (
-                <li
-                  key={item}
-                  className="flex gap-2.5 text-[13px]"
-                  style={{ color: "var(--text-3)" }}
-                >
-                  <span style={{ color: "var(--text-4)" }}>◇</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ─── Install ─── */
 function Install() {
   return (
@@ -492,6 +418,9 @@ function Install() {
           </Link>
           <Link href="/docs/installation" className="btn-secondary">
             Installation guide
+          </Link>
+          <Link href="/docs/quick-start" className="btn-secondary">
+            Example walkthrough
           </Link>
           <a
             href="https://github.com/Webrowse/romyq"
