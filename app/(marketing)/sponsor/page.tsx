@@ -93,7 +93,7 @@ export default function SponsorPage() {
         >
           How to support
         </h2>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <a
             href="https://github.com/sponsors/Webrowse"
             target="_blank"
@@ -104,24 +104,17 @@ export default function SponsorPage() {
             <div className="font-semibold mb-1" style={{ color: "var(--text)" }}>
               GitHub Sponsors
             </div>
-            <div style={{ color: "var(--text-3)" }}>Recurring monthly sponsorship</div>
-            <div className="mt-3 mono text-[11px]" style={{ color: "var(--accent)" }}>
-              github.com/sponsors ↗
+            <div style={{ color: "var(--text-3)" }}>
+              Recurring monthly or one-time sponsorship
             </div>
-          </a>
-          <a
-            href="https://buymeacoffee.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block p-4 rounded-md text-[13px]"
-            style={{ border: B }}
-          >
-            <div className="font-semibold mb-1" style={{ color: "var(--text)" }}>
-              Buy Me a Coffee
-            </div>
-            <div style={{ color: "var(--text-3)" }}>One-time contribution</div>
-            <div className="mt-3 mono text-[11px]" style={{ color: "var(--accent)" }}>
-              buymeacoffee.com ↗
+            <div className="mt-3">
+              <iframe
+                src="https://github.com/sponsors/Webrowse/button"
+                title="Sponsor Webrowse"
+                height="32"
+                width="114"
+                style={{ border: 0, borderRadius: 6 }}
+              />
             </div>
           </a>
           <div
@@ -129,11 +122,13 @@ export default function SponsorPage() {
             style={{ border: B }}
           >
             <div className="font-semibold mb-1" style={{ color: "var(--text)" }}>
-              UPI
+              Direct payment
             </div>
-            <div style={{ color: "var(--text-3)" }}>Direct payment (India)</div>
+            <div style={{ color: "var(--text-3)" }}>
+              Razorpay link coming soon
+            </div>
             <div className="mt-3 mono text-[11px]" style={{ color: "var(--text-4)" }}>
-              Contact for details
+              Until then, GitHub Sponsors is the way to contribute
             </div>
           </div>
         </div>
