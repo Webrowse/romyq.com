@@ -50,10 +50,18 @@ human-readable JSON and Markdown.
 
 ### Do I need a specific LLM provider?
 
-You need a [DeepSeek API key](https://platform.deepseek.com/) for the planning provider and [Claude Code](https://claude.ai/code) installed and authenticated for the execution provider. Set the key in `.env`:
+You need [Claude Code](https://claude.ai/code) installed and authenticated for the execution provider. For planning, `romyq init` lets you choose [DeepSeek](https://platform.deepseek.com/) (default), [OpenAI](https://platform.openai.com/), or any custom OpenAI-compatible endpoint. Set the key in `.env`:
 
 ```
 DEEPSEEK_API_KEY=sk-...
+```
+
+Or, for a non-DeepSeek provider:
+
+```
+ROMYQ_PLANNER_API_KEY=sk-...
+ROMYQ_PLANNER_BASE_URL=https://api.openai.com/v1
+ROMYQ_PLANNER_MODEL=gpt-4o-mini
 ```
 
 ## Lifecycle
