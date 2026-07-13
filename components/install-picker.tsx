@@ -49,7 +49,7 @@ export function InstallPicker({ variant = "full" }: { variant?: Variant }) {
                 <span style={{ color: "var(--text)" }}>brew install webrowse/street/romyq</span>
               </div>
               <div className="mono text-[13px]" style={{ color: "var(--text-3)" }}>
-                Successfully installed romyq 0.10.3
+                Successfully installed romyq 0.11.0
               </div>
             </>
           ) : (
@@ -59,7 +59,7 @@ export function InstallPicker({ variant = "full" }: { variant?: Variant }) {
                 <span style={{ color: "var(--text)" }}>pip install romyq</span>
               </div>
               <div className="mono text-[13px]" style={{ color: "var(--text-3)" }}>
-                Successfully installed romyq-0.10.3
+                Successfully installed romyq-0.11.0
               </div>
             </>
           )}

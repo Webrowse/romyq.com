@@ -7,14 +7,15 @@ description: Install Romyq and run your first autonomous project in under five m
 
 - Python 3.10 or later
 - Git
-- A [DeepSeek API key](https://platform.deepseek.com/) — for planning
+- An API key for a planning provider — [DeepSeek](https://platform.deepseek.com/) (default) or [OpenAI](https://platform.openai.com/), or any custom OpenAI-compatible endpoint
 - [Claude Code](https://claude.ai/code) installed and authenticated — for execution
 
 ## Install
 
 ```bash
-pip install romyq
-romyq version   # confirm: romyq 0.10.3
+brew install webrowse/street/romyq   # macOS / Linux
+pip install romyq                    # any platform
+romyq version   # confirm: romyq 0.11.0
 ```
 
 ## New project
@@ -26,7 +27,7 @@ git init
 romyq init
 ```
 
-The wizard asks for your mission, complexity profile, and DeepSeek API key. It writes `.env`, creates `.romyq/`, generates a `mission.md`, and shows a lifecycle preview from DeepSeek before you confirm.
+The wizard asks for your mission, complexity profile, and planning provider. Pick DeepSeek, OpenAI, or a custom OpenAI-compatible endpoint — type `b` at any prompt to go back and choose again. It writes `.env`, creates `.romyq/`, generates a `mission.md`, and shows a lifecycle preview before you confirm.
 
 ## Existing project
 
@@ -44,6 +45,16 @@ If you need to set or update the key manually:
 ```bash
 echo "DEEPSEEK_API_KEY=sk-..." >> .env
 ```
+
+To use OpenAI or a custom endpoint instead:
+
+```bash
+echo "ROMYQ_PLANNER_API_KEY=sk-..." >> .env
+echo "ROMYQ_PLANNER_BASE_URL=https://api.openai.com/v1" >> .env
+echo "ROMYQ_PLANNER_MODEL=gpt-4o-mini" >> .env
+```
+
+`ROMYQ_PLANNER_API_KEY` takes precedence over `DEEPSEEK_API_KEY` if both are set.
 
 ## Check your environment
 

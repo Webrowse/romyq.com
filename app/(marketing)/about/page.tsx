@@ -103,7 +103,7 @@ export default function AboutPage() {
 
       <Prose title="Project status">
         <p>
-          Romyq is in active development. The current stable release is v0.10.3.
+          Romyq is in active development. The current stable release is v0.11.0.
           The core lifecycle engine, governance system, memory layers, readiness
           scoring, and recommendation engine are all implemented. Documentation
           and test coverage are expanding.

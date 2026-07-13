@@ -16,7 +16,7 @@ const jsonLd = {
   url: "https://romyq.com",
   applicationCategory: "DeveloperApplication",
   operatingSystem: "Linux, macOS, Windows",
-  softwareVersion: "0.10.3",
+  softwareVersion: "0.11.0",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   license: "https://opensource.org/licenses/MIT",
   downloadUrl: "https://pypi.org/project/romyq/",
@@ -50,7 +50,7 @@ function Hero() {
     <section className="py-16 lg:py-20" style={{ borderBottom: B }}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="max-w-3xl">
-          <p className="eyebrow mb-5">Open source · local-first · v0.10.3</p>
+          <p className="eyebrow mb-5">Open source · local-first · v0.11.0</p>
 
           <h1
             className="text-[28px] sm:text-[36px] font-semibold leading-tight mb-4"
@@ -96,7 +96,7 @@ function Hero() {
 /* ─── Facts bar ─── */
 function Facts() {
   const facts = [
-    { label: "Version", value: "v0.10.3" },
+    { label: "Version", value: "v0.11.0" },
     { label: "Tests", value: "1,500+" },
     { label: "License", value: "MIT" },
     { label: "Cloud dependency", value: "None" },
@@ -340,7 +340,7 @@ function Implemented() {
           >
             What exists today
           </h2>
-          <span className="tag tag-green">v0.10.3</span>
+          <span className="tag tag-green">v0.11.0</span>
         </div>
         <p
           className="text-[15px] leading-relaxed mb-8 max-w-2xl"

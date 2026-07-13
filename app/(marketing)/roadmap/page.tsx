@@ -30,7 +30,7 @@ export default function RoadmapPage() {
       <Section
         id="implemented"
         label="Implemented"
-        badge={{ text: "v0.10.3", cls: "tag-green" }}
+        badge={{ text: "v0.11.0", cls: "tag-green" }}
         description="These features are available in the current release."
       >
         <ItemList
@@ -43,7 +43,7 @@ export default function RoadmapPage() {
             { title: "Recommendation engine", detail: "Emits Continue, Pause, Review, or Stop after every task. Re-evaluated after every operator command." },
             { title: "Timeline", detail: "Chronological, append-only log of every phase transition, task outcome, and operator command." },
             { title: "Operator shell", detail: "Interactive REPL with built-in commands: status, roadmap, phase, readiness, recommendation, pause, resume, stop, rules, knowledge, dashboard. Free-text sends a steering instruction." },
-            { title: "Provider transparency", detail: "Planning and execution providers are configurable independently. DeepSeek, Gemini, Claude, OpenAI-compatible." },
+            { title: "Provider choice", detail: "romyq init supports DeepSeek, OpenAI, or any custom OpenAI-compatible planning endpoint, with back navigation to correct a wrong choice." },
             { title: "Multi-project support", detail: "Multiple projects managed from a single session. Each maintains independent state, memory, and rules." },
             { title: "Decision log", detail: "Every governance decision recorded in .romyq/decisions.json. Human-readable. Diffable." },
             { title: "Error recovery", detail: "Lifecycle state preserved on failure. Resume from last checkpoint with romyq resume." },
@@ -70,7 +70,7 @@ export default function RoadmapPage() {
       <Section
         id="planned"
         label="Planned"
-        badge={{ text: "v0.11", cls: "tag-blue" }}
+        badge={{ text: "v0.12", cls: "tag-blue" }}
         description="Confirmed scope for the next minor release. Not yet implemented."
       >
         <ItemList

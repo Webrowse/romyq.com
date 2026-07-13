@@ -58,7 +58,7 @@ export function Footer() {
               Software lifecycle management for AI-assisted development.
             </p>
             <p className="text-[12px] mono" style={{ color: "var(--text-4)" }}>
-              MIT License · v0.10.3
+              MIT License · v0.11.0
             </p>
           </div>
 

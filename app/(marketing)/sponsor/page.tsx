@@ -38,7 +38,7 @@ export default function SponsorPage() {
           style={{ border: B, background: "var(--bg-subtle)" }}
         >
           {[
-            ["Version", "v0.10.3"],
+            ["Version", "v0.11.0"],
             ["Status", "Active"],
             ["Funding", "Unfunded"],
             ["License", "MIT"],

@@ -1,0 +1,67 @@
+---
+title: Romyq 0.11.0
+version: "0.11.0"
+date: "2026-07-13"
+tag: minor
+highlights:
+  - Provider choice in the setup wizard
+  - Fixed .env not loading for Homebrew/pip installs
+  - Homebrew formula dependency fix
+---
+
+## Overview
+
+Romyq 0.11.0 adds provider choice to the setup wizard and fixes a bug that
+silently ignored `.env` for anyone using a Homebrew, pipx, or global pip
+install.
+
+## What's New
+
+### Provider Choice
+
+`romyq init` now asks which planning provider to use:
+
+```
+[1] DeepSeek         deepseek-chat  (recommended)
+[2] OpenAI           gpt-4o-mini
+[3] Other            any OpenAI-compatible endpoint
+[4] Configure later
+```
+
+Type `b` at any key or endpoint prompt to go back and pick again.
+
+Configuration is also available directly through environment variables:
+
+```bash
+ROMYQ_PLANNER_API_KEY=sk-...
+ROMYQ_PLANNER_BASE_URL=https://api.openai.com/v1
+ROMYQ_PLANNER_MODEL=gpt-4o-mini
+```
+
+`ROMYQ_PLANNER_API_KEY` takes precedence over `DEEPSEEK_API_KEY`. Existing
+`DEEPSEEK_API_KEY` setups continue to work unchanged.
+
+### Bug Fixes
+
+- **`.env` not loaded for installed CLIs**: `load_dotenv()` with no arguments
+  searches from the package's install location, not the project directory.
+  For a Homebrew, pipx, or global pip install this meant a correctly
+  configured `.env` was silently ignored and `romyq run` reported a missing
+  API key. All commands now load `.env` from the workspace directly.
+- A planner request failure during task generation (network error, bad key,
+  rate limit) crashed the run with a traceback. It now stops cleanly with an
+  actionable message.
+- The Homebrew formula installed a virtualenv with no dependencies. Every
+  command besides `--help` failed with `ModuleNotFoundError`. Fixed in the
+  tap; the formula test now checks the dependency chain.
+- PyPI project links pointed at a nonexistent GitHub repository.
+
+## Installation
+
+```bash
+brew install webrowse/street/romyq
+pip install romyq==0.11.0
+```
+
+This is the current stable version. Run `pip install romyq` without a
+version pin to install it.
