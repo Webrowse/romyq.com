@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DonationCard } from "@/components/donation-card";
 
 export const metadata: Metadata = {
   title: "Sponsor",
@@ -117,20 +118,7 @@ export default function SponsorPage() {
               />
             </div>
           </a>
-          <div
-            className="block p-4 rounded-md text-[13px]"
-            style={{ border: B }}
-          >
-            <div className="font-semibold mb-1" style={{ color: "var(--text)" }}>
-              Direct payment
-            </div>
-            <div style={{ color: "var(--text-3)" }}>
-              Razorpay link coming soon
-            </div>
-            <div className="mt-3 mono text-[11px]" style={{ color: "var(--text-4)" }}>
-              Until then, GitHub Sponsors is the way to contribute
-            </div>
-          </div>
+          <DonationCard />
         </div>
       </section>
 
